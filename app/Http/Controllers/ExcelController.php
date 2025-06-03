@@ -26,8 +26,8 @@ class ExcelController extends Controller
 
         $file = $request->file('excel_file');
      //   $fileName = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '.csv';
-     $originalName = $file->getClientOriginalName(); // e.g., "Academy Data.csv"
-    $fileName = Str::slug(pathinfo($originalName, PATHINFO_FILENAME)) . '.csv'; // e.g., "academy-data.csv"
+     $originalName = $file->getClientOriginalName(); 
+    $fileName = Str::slug(pathinfo($originalName, PATHINFO_FILENAME)) . '.csv'; 
 
         $file->storeAs('csv_uploads', $fileName, 'public');
 

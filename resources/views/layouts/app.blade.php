@@ -70,6 +70,9 @@
         <a class="nav-link {{ request()->routeIs('api.index') ? 'active' : '' }}" href="{{ route('api.index') }}">
             <i class="fas fa-cloud-download-alt me-2"></i> Fetch Data
         </a>
+        <a class="nav-link {{ request()->routeIs('profile.show') ? 'active' : '' }}" href="{{ route('profile.show') }}">
+            <i class="fa-solid fa-user me-2"></i>  Profile
+        </a>
     </div>
 
     <!-- Navbar -->

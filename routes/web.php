@@ -4,7 +4,8 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\ExcelController;
 use App\Http\Controllers\ApiFetchController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ApiDataController; // Add this import
+use App\Http\Controllers\ApiDataController;
+use App\Http\Controllers\ProfileController;
 
 // Redirect root to excel dashboard
 Route::get('/', function () {
@@ -18,8 +19,13 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Group protected routes that require authentication
 Route::middleware(['auth'])->group(function () {
+    //profile 
+    Route::post('/profile/update-name', [ProfileController::class, 'updateName'])->name('profile.updateName');
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::post('/profile/reset-password', [ProfileController::class, 'resetPassword'])->name('profile.resetPassword');
+
+
     // Excel routes
-    
     Route::get('/excel', [ExcelController::class, 'index'])->name('excel.index');
     Route::get('/excel/files/datatables', [ExcelController::class, 'filesData'])->name('excel.files.data');
     Route::get('/excel/upload', [ExcelController::class, 'upload'])->name('excel.upload');
