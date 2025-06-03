@@ -83,9 +83,9 @@
                                            name="api_url" 
                                            placeholder="https://jsonplaceholder.typicode.com/posts"
                                            required>
-                                    <div class="form-text text-light">
+                                    <!-- <div class="form-text text-light">
                                         Enter any public API URL that returns JSON data
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -274,7 +274,7 @@
                         }
                     ],
                     order: [[0, 'asc']],
-                    pageLength: 25,
+                    pageLength: 30,
                     lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
                     dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
                          '<"row"<"col-sm-12"tr>>' +
