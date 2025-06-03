@@ -1,27 +1,86 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>@yield('title', 'Laravel Excel DataTables')</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    
+    <!-- Bootstrap & FontAwesome -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .sidebar {
+            height: 100vh;
+            width: 240px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            background-color: #0d6efd;
+            padding-top: 60px;
+            color: white;
+        }
+
+        .sidebar .nav-link {
+            color: white;
+            padding: 12px 20px;
+        }
+
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            background-color: #0b5ed7;
+            border-left: 4px solid #ffc107;
+        }
+
+        .main-content {
+            margin-left: 240px;
+            padding: 20px;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 240px;
+            right: 0;
+            z-index: 1000;
+        }
+    </style>
+
     @stack('styles')
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
-            <a class="navbar-brand" href="{{ route('excel.index') }}">Excel DataTables</a>
-            <div class="navbar-nav ms-auto">
-                <a class="nav-link" href="{{ route('excel.index') }}">Dashboard</a>
-                <a class="nav-link" href="{{ route('excel.upload') }}">Upload Excel</a>
-                <a class="nav-link" href="{{ route('posts.index') }}">Posts CRUD</a>
-                <a class="nav-link" href="{{ route('api.index') }}">Fetch Data</a>
-            </div>
-        </div>
-    </nav>
 
-    <div class="container mt-4">
+    <!-- Sidebar -->
+    <div class="sidebar d-flex flex-column position-fixed">
+        <div class="text-center mb-4">
+            <h4 class="mt-2"><i class="fa-solid fa-bars"></i> Menu Bar</h4>
+        </div>
+        <a class="nav-link {{ request()->routeIs('excel.index') ? 'active' : '' }}" href="{{ route('excel.index') }}">
+            <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+        </a>
+        <a class="nav-link {{ request()->routeIs('excel.upload') ? 'active' : '' }}" href="{{ route('excel.upload') }}">
+            <i class="fas fa-upload me-2"></i> Upload Excel
+        </a>
+        <a class="nav-link {{ request()->routeIs('posts.index') ? 'active' : '' }}" href="{{ route('posts.index') }}">
+            <i class="fas fa-database me-2"></i> Posts CRUD
+        </a>
+        <a class="nav-link {{ request()->routeIs('api.index') ? 'active' : '' }}" href="{{ route('api.index') }}">
+            <i class="fas fa-cloud-download-alt me-2"></i> Fetch Data
+        </a>
+    </div>
+
+    <!-- Navbar -->
+    <!-- <nav class="navbar navbar-dark bg-primary">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1">Laravel Excel DataTables</span>
+        </div>
+    </nav> -->
+
+    <!-- Main Content -->
+    <div class="main-content">
         @if(session('success'))
             <div class="alert alert-success alert-dismissible fade show">
                 {{ session('success') }}
@@ -39,10 +98,12 @@
         @yield('content')
     </div>
 
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
     @stack('scripts')
+
 </body>
 </html>

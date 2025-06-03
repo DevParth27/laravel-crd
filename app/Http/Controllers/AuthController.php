@@ -21,6 +21,7 @@ class AuthController extends Controller
             $request->session()->regenerate();
             return redirect()->intended(route('excel.index'))->with('success', 'Logged in successfully!');
         }
+           Auth::logoutOtherDevices($request->input('password'));
 
         return back()->withErrors([
             'email' => 'Invalid email or password.',

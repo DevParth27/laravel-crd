@@ -19,7 +19,9 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // Group protected routes that require authentication
 Route::middleware(['auth'])->group(function () {
     // Excel routes
+    
     Route::get('/excel', [ExcelController::class, 'index'])->name('excel.index');
+    Route::get('/excel/files/datatables', [ExcelController::class, 'filesData'])->name('excel.files.data');
     Route::get('/excel/upload', [ExcelController::class, 'upload'])->name('excel.upload');
     Route::post('/excel/store', [ExcelController::class, 'store'])->name('excel.store');
     Route::get('/excel/{fileName}/data', [ExcelController::class, 'getData'])->name('excel.data');

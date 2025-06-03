@@ -13,7 +13,8 @@ return new class extends Migration
 {
     Schema::create('excel_files', function (Blueprint $table) {
         $table->id();
-        $table->string('file_name')->unique();
+        $table->string('file_name');
+        $table->string('original_name');  
         $table->json('headers');
         $table->timestamps();
     });

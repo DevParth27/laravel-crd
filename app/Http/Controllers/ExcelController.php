@@ -25,7 +25,10 @@ class ExcelController extends Controller
         ]);
 
         $file = $request->file('excel_file');
-        $fileName = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '.csv';
+     //   $fileName = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '.csv';
+     $originalName = $file->getClientOriginalName(); // e.g., "Academy Data.csv"
+    $fileName = Str::slug(pathinfo($originalName, PATHINFO_FILENAME)) . '.csv'; // e.g., "academy-data.csv"
+
         $file->storeAs('csv_uploads', $fileName, 'public');
 
         $csvData = array_map('str_getcsv', file($file->getRealPath()));
@@ -34,6 +37,7 @@ class ExcelController extends Controller
         // Save file meta info
         ExcelFile::create([
             'file_name' => $fileName,
+            'original_name' => $originalName,
             'headers' => json_encode($headers),
         ]);
 
@@ -72,6 +76,32 @@ class ExcelController extends Controller
         'file' => $fileName,
         'columns' => $columns,
     ]);
+}
+public function filesData()
+{
+    $files = ExcelFile::all();
+
+    return DataTables::of($files)
+        ->addColumn('record_count', function ($file) {
+            return ExcelData::where('file_name', $file->file_name)->count();
+        })
+        ->addColumn('uploaded_at', function ($file) {
+            return $file->created_at ? $file->created_at->format('M d, Y H:i') : 'Unknown';
+        })
+        ->addColumn('actions', function ($file) {
+            $view = route('excel.show', $file->file_name);
+            $delete = route('excel.delete-file', $file->file_name);
+
+            return '
+                <a href="'.$view.'" class="btn btn-sm btn-primary"><i class="fas fa-table"></i> View</a>
+                <form action="'.$delete.'" method="POST" class="d-inline" onsubmit="return confirm(\'Delete this file and all its data?\')">
+                    '.csrf_field().method_field('DELETE').'
+                    <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i> Delete</button>
+                </form>
+            ';
+        })
+        ->rawColumns(['actions'])
+        ->make(true);
 }
 
 
