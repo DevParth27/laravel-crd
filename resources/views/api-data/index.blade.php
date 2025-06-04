@@ -1,21 +1,64 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Dynamic API DataTable</title>
-    
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- DataTables CSS -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap5.min.css">
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+@extends('layouts.app') {{-- Adjust this path based on your folder structure --}}
+
+@section('content')
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="text-center mb-4">
+                <i class="fas fa-database"></i> API Data Fetching
+            </h1>
+
+            <!-- API Form -->
+            <div class="api-form">
+                <h3><i class="fas fa-link"></i> Enter API URL</h3>
+                <form id="apiForm">
+                    <div class="row">
+                        <div class="col-md-9">
+                            <div class="mb-3">
+                                <label for="apiUrl" class="form-label">API URL</label>
+                                <input type="url" class="form-control" id="apiUrl" name="api_url"
+                                    placeholder="https://jsonplaceholder.typicode.com/posts" required>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">&nbsp;</label>
+                            <button type="submit" class="btn btn-fetch btn-lg w-100">
+                                <i class="fas fa-download"></i> Fetch Data
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div class="loading-spinner text-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-2">Fetching data from API...</p>
+            </div>
+
+            <!-- API Info -->
+            <div id="apiInfo" class="api-info" style="display: none;">
+                <i class="fas fa-info-circle"></i>
+                <span id="apiInfoText"></span>
+            </div>
+
+            <!-- DataTable Container -->
+            <div class="datatable-container" id="datatableContainer" style="display: none;">
+                <h4><i class="fas fa-table"></i> API Data</h4>
+                <div class="table-responsive">
+                    <table id="apiDataTable" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
+@push('styles')
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap5.min.css">
     <style>
         .api-form {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -24,34 +67,34 @@
             color: white;
             margin-bottom: 2rem;
         }
-        
+
         .form-control:focus {
             border-color: #667eea;
             box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
         }
-        
+
         .btn-fetch {
             background: linear-gradient(45deg, #ff6b6b, #ee5a24);
             border: none;
             transition: all 0.3s ease;
         }
-        
+
         .btn-fetch:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(238, 90, 36, 0.4);
         }
-        
+
         .datatable-container {
             background: white;
             border-radius: 15px;
             padding: 2rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
-        
+
         .loading-spinner {
             display: none;
         }
-        
+
         .api-info {
             background: linear-gradient(135deg, #2ecc71, #27ae60);
             color: white;
@@ -60,69 +103,7 @@
             margin-bottom: 1rem;
         }
     </style>
-</head>
-<body class="bg-light">
-    <div class="container-fluid py-4">
-        <div class="row">
-            <div class="col-12">
-                <h1 class="text-center mb-4">
-                    <i class="fas fa-database"></i> API Data Fetching
-                </h1>
-                
-                <!-- API Form -->
-                <div class="api-form">
-                    <h3><i class="fas fa-link"></i> Enter API URL</h3>
-                    <form id="apiForm">
-                        <div class="row">
-                            <div class="col-md-9">
-                                <div class="mb-3">
-                                    <label for="apiUrl" class="form-label">API URL</label>
-                                    <input type="url" 
-                                           class="form-control" 
-                                           id="apiUrl" 
-                                           name="api_url" 
-                                           placeholder="https://jsonplaceholder.typicode.com/posts"
-                                           required>
-                                    <!-- <div class="form-text text-light">
-                                        Enter any public API URL that returns JSON data
-                                    </div> -->
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">&nbsp;</label>
-                                <button type="submit" class="btn btn-fetch btn-lg w-100">
-                                    <i class="fas fa-download"></i> Fetch Data
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- Loading Spinner -->
-                <div class="loading-spinner text-center">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                    <p class="mt-2">Fetching data from API...</p>
-                </div>
-
-                <!-- API Info -->
-                <div id="apiInfo" class="api-info" style="display: none;">
-                    <i class="fas fa-info-circle"></i> 
-                    <span id="apiInfoText"></span>
-                </div>
-
-                <!-- DataTable Container -->
-                <div class="datatable-container" id="datatableContainer" style="display: none;">
-                    <h4><i class="fas fa-table"></i> API Data</h4>
-                    <div class="table-responsive">
-                        <table id="apiDataTable" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+@endpush
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

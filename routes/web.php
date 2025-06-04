@@ -21,6 +21,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware(['auth'])->group(function () {
     //profile 
     Route::post('/profile/update-name', [ProfileController::class, 'updateName'])->name('profile.updateName');
+    Route::post('/profile/update-email', [ProfileController::class, 'updateEmail'])->name('profile.updateEmail');
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::post('/profile/reset-password', [ProfileController::class, 'resetPassword'])->name('profile.resetPassword');
 
