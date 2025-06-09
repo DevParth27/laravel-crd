@@ -16,12 +16,6 @@
                                 <div class="profile-avatar">
                                     <i class="fas fa-user"></i>
                                 </div>
-                                <div class="profile-avatar-upload">
-                                    <label for="avatar-upload" class="mb-0">
-                                        <i class="fas fa-camera"></i>
-                                    </label>
-                                    <input type="file" id="avatar-upload" class="d-none">
-                                </div>
                             </div>
                         </div>
                         <div class="col">
@@ -91,7 +85,7 @@
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
-                                        <div class="form-text">This name will be displayed on your profile and posts</div>
+                                        <div class="form-text">This name will be displayed on your profile</div>
                                     </div>
 
                                     <div class="mb-4">
@@ -100,11 +94,20 @@
                                             <span class="input-group-text">
                                                 <i class="fas fa-envelope"></i>
                                             </span>
-                                            <input type="email" class="form-control" 
-                                                value="{{ $user->email }}" 
-                                                readonly disabled>
-                                        </div>
-                
+                                            @if(auth()->user()->role === 'admin')
+                                                <input type="email" id="email" name="email"
+                                                    class="form-control @error('email') is-invalid @enderror"
+                                                    value="{{ old('email', $user->email) }}"
+                                                    placeholder="Enter email address">
+                                                @error('email')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+                                            @else
+                                                <input type="email" class="form-control" 
+                                                    value="{{ $user->email }}" 
+                                                    readonly disabled>
+                                            @endif
+                                        </div>         
                                     </div>
 
                                     <div class="d-flex justify-content-end">
