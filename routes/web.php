@@ -39,14 +39,9 @@ Route::middleware(['auth'])->group(function () {
     // Posts CRUD routes
     Route::resource('posts', PostController::class);
     
-    // Dynamic API Data Routes (NEW)
+    // Dynamic API Data Routes    
     Route::get('/api-data', [ApiDataController::class, 'index'])->name('api.index');
     Route::post('/api-data/fetch', [ApiDataController::class, 'fetchData'])->name('api.fetch');
     Route::get('/api-data/datatable', [ApiDataController::class, 'getDatatableData'])->name('api.datatable');
     Route::get('/api-data/columns', [ApiDataController::class, 'getColumns'])->name('api.columns');
-    
-    // Original API fetch routes (commented out - you can remove these if not needed)
-    // Route::get('/api-fetch', [ApiFetchController::class, 'form'])->name('fetch.api.form');
-    // Route::post('/api-fetch', [ApiFetchController::class, 'fetch'])->name('fetch.api.fetch');
-    // Route::get('/api-fetch/data', [ApiFetchController::class, 'getTableData'])->name('fetch.api.get_table_data');
 });
