@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class ExcelFile extends Model
 {
-    protected $fillable = ['file_name', 'headers'];
+    protected $fillable = ['file_name', 'original_name', 'headers'];
 }

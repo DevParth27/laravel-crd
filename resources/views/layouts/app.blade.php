@@ -61,18 +61,31 @@
         <a class="nav-link {{ request()->routeIs('excel.index') ? 'active' : '' }}" href="{{ route('excel.index') }}">
             <i class="fas fa-tachometer-alt me-2"></i> Dashboard
         </a>
+        @if(Auth::check() && Auth::user()->isAdmin())
         <a class="nav-link {{ request()->routeIs('excel.upload') ? 'active' : '' }}" href="{{ route('excel.upload') }}">
             <i class="fas fa-upload me-2"></i> Upload Excel
         </a>
+        @endif
         <a class="nav-link {{ request()->routeIs('posts.index') ? 'active' : '' }}" href="{{ route('posts.index') }}">
             <i class="fas fa-database me-2"></i> Posts CRUD
         </a>
+        @if(Auth::check() && Auth::user()->isAdmin())
         <a class="nav-link {{ request()->routeIs('api.index') ? 'active' : '' }}" href="{{ route('api.index') }}">
             <i class="fas fa-cloud-download-alt me-2"></i> Fetch Data
         </a>
+        @endif
         <a class="nav-link {{ request()->routeIs('profile.show') ? 'active' : '' }}" href="{{ route('profile.show') }}">
             <i class="fa-solid fa-user me-2"></i>  Profile
         </a>
+        
+        <!-- Add this at the bottom of the sidebar -->
+        @if(Auth::check())
+        <div class="mt-auto mb-3 text-center">
+            <div class="bg-light text-primary p-2 rounded">
+                <strong>Role: {{ ucfirst(Auth::user()->role) }}</strong>
+            </div>
+        </div>
+        @endif
     </div>
 
     <!-- Navbar -->
