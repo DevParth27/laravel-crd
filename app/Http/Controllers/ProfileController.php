@@ -44,16 +44,16 @@ class ProfileController extends Controller
 
     return back()->with('success', 'Name updated successfully.');
 }
- public function updateEmail(Request $request)
-{
-    $request->validate([
-        'email' => 'required|string|max:255',
-    ]);
+//  public function updateEmail(Request $request)
+// {
+//     $request->validate([
+//         'email' => 'required|string|max:255',
+//     ]);
 
-    $user = Auth::user();
-    $user->email = $request->email;
-    $user->save();
+//     $user = Auth::user();
+//     $user->email = $request->email;
+//     $user->save();
 
-    return back()->with('success', 'Email updated successfully.');
-}
+//     return back()->with('success', 'Email updated successfully.');
+// }
 }

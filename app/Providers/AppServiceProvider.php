@@ -21,4 +21,10 @@ class AppServiceProvider extends ServiceProvider
     {
         //
     }
+    protected $policies = [
+        ExcelFile::class => ExcelFilePolicy::class,
+        Post::class => PostPolicy::class,
+    ];
+    
 }
+

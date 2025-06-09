@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class PostController extends Controller
 {
@@ -18,7 +19,31 @@ class PostController extends Controller
     {
         return view('posts.create');
     }
-
+    public function getData()
+    {
+        $posts = Post::all();
+    
+        return DataTables::of($posts)
+            ->addColumn('actions', function ($post) {
+                $buttons = '<a href="' . route('posts.show', $post) . '" class="btn btn-sm btn-secondary">View</a>';
+    
+                if (auth()->user()->can('update', $post)) {
+                    $buttons .= ' <a href="' . route('posts.edit', $post) . '" class="btn btn-sm btn-primary">Edit</a>';
+                }
+    
+                if (auth()->user()->can('delete', $post)) {
+                    $buttons .= '
+                        <form action="' . route('posts.destroy', $post) . '" method="POST" class="d-inline" onsubmit="return confirm(\'Delete this post?\')">
+                            ' . csrf_field() . method_field('DELETE') . '
+                            <button class="btn btn-sm btn-danger">Delete</button>
+                        </form>';
+                }
+    
+                return $buttons;
+            })
+            ->rawColumns(['actions'])
+            ->make(true);
+    }
     // Store new post
     public function store(Request $request)
     {

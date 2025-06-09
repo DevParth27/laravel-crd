@@ -71,7 +71,7 @@
 
                                 <hr class="my-4">
 
-                                {{-- Update Email Section --}}
+                                <!-- {{-- Update Email Section --}}
                                 <div>
                                     <h6 class="text-muted mb-3 fw-semibold">
                                         <i class="fas fa-envelope me-2"></i>Update Email
@@ -97,7 +97,7 @@
                                             <i class="fas fa-save me-1"></i>Update Email
                                         </button>
                                     </form>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>

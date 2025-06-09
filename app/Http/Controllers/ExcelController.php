@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\Gate;
 
 class ExcelController extends Controller
 {
@@ -92,13 +93,18 @@ public function filesData()
             $view = route('excel.show', $file->file_name);
             $delete = route('excel.delete-file', $file->file_name);
 
-            return '
-                <a href="'.$view.'" class="btn btn-sm btn-primary"><i class="fas fa-table"></i> View</a>
-                <form action="'.$delete.'" method="POST" class="d-inline" onsubmit="return confirm(\'Delete this file and all its data?\')">
-                    '.csrf_field().method_field('DELETE').'
-                    <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i> Delete</button>
-                </form>
-            ';
+            $buttons = '<a href="'.$view.'" class="btn btn-sm btn-primary"><i class="fas fa-table"></i> View</a>';
+
+            // Only show delete if user can delete
+            if (Gate::allows('delete', $file)) {
+                $buttons .= '
+                    <form action="'.$delete.'" method="POST" class="d-inline" onsubmit="return confirm(\'Delete this file and all its data?\')">
+                        '.csrf_field().method_field('DELETE').'
+                        <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i> Delete</button>
+                    </form>';
+            }
+
+            return $buttons;
         })
         ->rawColumns(['actions'])
         ->make(true);
