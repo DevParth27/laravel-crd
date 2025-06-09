@@ -3,222 +3,190 @@
 @section('title', 'My Profile')
 
 @section('content')
-<div class="container-fluid py-4" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh;">
-    <div class="container">
+<div class="profile-page">
+    <div class="container py-5">
         <div class="row justify-content-center">
-            <div class="col-xl-10 col-lg-11">
+            <div class="col-xl-10">
                 
-                {{-- Page Header --}}
-                <div class="text-center mb-5">
-                    <div class="d-inline-flex align-items-center justify-content-center bg-white rounded-circle shadow-lg mb-3" 
-                         style="width: 80px; height: 80px;">
-                        <i class="fas fa-user-circle text-primary" style="font-size: 2.5rem;"></i>
+                {{-- Profile Header --}}
+                <div class="profile-header mb-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-auto text-center text-md-start mb-3 mb-md-0">
+                            <div class="profile-avatar-container">
+                                <div class="profile-avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="profile-avatar-upload">
+                                    <label for="avatar-upload" class="mb-0">
+                                        <i class="fas fa-camera"></i>
+                                    </label>
+                                    <input type="file" id="avatar-upload" class="d-none">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <h2 class="profile-name mb-1">{{ $user->name }}</h2>
+                            <p class="profile-email mb-2">{{ $user->email }}</p>
+                            <div class="profile-meta">
+                                <span><i class="fas fa-calendar-alt"></i> Member since {{ $user->created_at->format('M Y') }}</span>
+                                <span><i class="fas fa-user-tag"></i> {{ ucfirst($user->role ?? 'User') }}</span>
+                            </div>
+                        </div>
                     </div>
-                    <h2 class="text-white fw-bold mb-2">Profile Settings</h2>
-                    <p class="text-white-50 mb-0">Manage your account information and security settings</p>
                 </div>
 
                 {{-- Alert Messages --}}
                 @if(session('success'))
-                    <div class="alert alert-success alert-dismissible fade show shadow-sm border-0 mb-4" role="alert">
-                        <div class="d-flex align-items-center">
-                            <i class="fas fa-check-circle me-2"></i>
-                            <div>{{ session('success') }}</div>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <div class="d-flex">
+                            <div class="alert-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="alert-content">
+                                {{ session('success') }}
+                            </div>
                         </div>
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 @endif
 
-                <div class="row g-4">
-                    {{-- Profile Information Card --}}
-                    <div class="col-lg-6">
-                        <div class="card border-0 shadow-lg h-100" style="backdrop-filter: blur(10px);">
-                            <div class="card-header bg-gradient text-white border-0 py-3" 
-                                 style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
-                                <div class="d-flex align-items-center">
-                                    <i class="fas fa-user-edit me-2"></i>
-                                    <h5 class="mb-0 fw-semibold">Personal Information</h5>
-                                </div>
-                            </div>
+                {{-- Profile Navigation --}}
+                <ul class="nav nav-tabs profile-tabs mb-4" id="profileTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="personal-tab" data-bs-toggle="tab" data-bs-target="#personal" 
+                                type="button" role="tab" aria-controls="personal" aria-selected="true">
+                            <i class="fas fa-user-edit me-2"></i>Personal Info
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="security-tab" data-bs-toggle="tab" data-bs-target="#security" 
+                                type="button" role="tab" aria-controls="security" aria-selected="false">
+                            <i class="fas fa-shield-alt me-2"></i>Security
+                        </button>
+                    </li>
+                </ul>
+
+                {{-- Tab Content --}}
+                <div class="tab-content profile-tab-content" id="profileTabsContent">
+                    {{-- Personal Info Tab --}}
+                    <div class="tab-pane fade show active" id="personal" role="tabpanel" aria-labelledby="personal-tab">
+                        <div class="card">
                             <div class="card-body p-4">
-                                {{-- Update Name Section --}}
-                                <div class="mb-4">
-                                    <h6 class="text-muted mb-3 fw-semibold">
-                                        <i class="fas fa-signature me-2"></i>Update Name
-                                    </h6>
-                                    <form method="POST" action="{{ route('profile.updateName') }}">
-                                        @csrf
-                                        <div class="mb-3">
-                                            <label class="form-label fw-medium text-dark">Full Name</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text bg-light border-end-0">
-                                                    <i class="fas fa-user text-muted"></i>
-                                                </span>
-                                                <input type="text" name="name" 
-                                                       class="form-control border-start-0 @error('name') is-invalid @enderror"
-                                                       value="{{ old('name', $user->name) }}" 
-                                                       placeholder="Enter your full name" required>
-                                                @error('name')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
+                                <h5 class="card-title mb-4">Personal Information</h5>
+                                
+                                {{-- Update Name Form --}}
+                                <form method="POST" action="{{ route('profile.updateName') }}" class="mb-5">
+                                    @csrf
+                                    <div class="mb-4">
+                                        <label for="name" class="form-label">Full Name</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-user"></i>
+                                            </span>
+                                            <input type="text" id="name" name="name" 
+                                                class="form-control @error('name') is-invalid @enderror"
+                                                value="{{ old('name', $user->name) }}" 
+                                                placeholder="Enter your full name" required>
+                                            @error('name')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
-                                        <button type="submit" class="btn btn-outline-primary btn-sm px-4">
-                                            <i class="fas fa-save me-1"></i>Update Name
-                                        </button>
-                                    </form>
-                                </div>
+                                        <div class="form-text">This name will be displayed on your profile and posts</div>
+                                    </div>
 
-                                <hr class="my-4">
-
-                                <!-- {{-- Update Email Section --}}
-                                <div>
-                                    <h6 class="text-muted mb-3 fw-semibold">
-                                        <i class="fas fa-envelope me-2"></i>Update Email
-                                    </h6>
-                                    <form method="POST" action="{{ route('profile.updateEmail') }}">
-                                        @csrf
-                                        <div class="mb-3">
-                                            <label class="form-label fw-medium text-dark">Email Address</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text bg-light border-end-0">
-                                                    <i class="fas fa-at text-muted"></i>
-                                                </span>
-                                                <input type="email" name="email" 
-                                                       class="form-control border-start-0 @error('email') is-invalid @enderror"
-                                                       value="{{ old('email', $user->email) }}" 
-                                                       placeholder="Enter your email address" required>
-                                                @error('email')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
+                                    <div class="mb-4">
+                                        <label for="email" class="form-label">Email Address</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-envelope"></i>
+                                            </span>
+                                            <input type="email" class="form-control" 
+                                                value="{{ $user->email }}" 
+                                                readonly disabled>
                                         </div>
-                                        <button type="submit" class="btn btn-outline-primary btn-sm px-4">
-                                            <i class="fas fa-save me-1"></i>Update Email
+                
+                                    </div>
+
+                                    <div class="d-flex justify-content-end">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-save me-2"></i>Save Changes
                                         </button>
-                                    </form>
-                                </div> -->
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
 
-                    {{-- Security Settings Card --}}
-                    <div class="col-lg-6">
-                        <div class="card border-0 shadow-lg h-100">
-                            <div class="card-header bg-gradient text-white border-0 py-3" 
-                                 style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
-                                <div class="d-flex align-items-center">
-                                    <i class="fas fa-shield-alt me-2"></i>
-                                    <h5 class="mb-0 fw-semibold">Security Settings</h5>
-                                </div>
-                            </div>
+                    {{-- Security Tab --}}
+                    <div class="tab-pane fade" id="security" role="tabpanel" aria-labelledby="security-tab">
+                        <div class="card">
                             <div class="card-body p-4">
-                                {{-- Change Password Section --}}
-                                <div class="mb-4">
-                                    <h6 class="text-muted mb-3 fw-semibold">
-                                        <i class="fas fa-key me-2"></i>Change Password
-                                    </h6>
-                                    <form method="POST" action="{{ route('profile.resetPassword') }}">
-                                        @csrf
-                                        <div class="mb-3">
-                                            <label class="form-label fw-medium text-dark">Current Password</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text bg-light border-end-0">
-                                                    <i class="fas fa-lock text-muted"></i>
-                                                </span>
-                                                <input type="password" name="current_password"
-                                                       class="form-control border-start-0 @error('current_password') is-invalid @enderror" 
-                                                       placeholder="Enter current password" required>
-                                                @error('current_password')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <label class="form-label fw-medium text-dark">New Password</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text bg-light border-end-0">
-                                                    <i class="fas fa-key text-muted"></i>
-                                                </span>
-                                                <input type="password" name="new_password"
-                                                       class="form-control border-start-0 @error('new_password') is-invalid @enderror" 
-                                                       placeholder="Enter new password" required>
-                                                @error('new_password')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <label class="form-label fw-medium text-dark">Confirm New Password</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text bg-light border-end-0">
-                                                    <i class="fas fa-check text-muted"></i>
-                                                </span>
-                                                <input type="password" name="new_password_confirmation" 
-                                                       class="form-control border-start-0" 
-                                                       placeholder="Confirm new password" required>
-                                            </div>
-                                        </div>
-
-                                        <button type="submit" class="btn btn-outline-warning btn-sm px-4">
-                                            <i class="fas fa-save me-1"></i>Update Password
-                                        </button>
-                                    </form>
-                                </div>
-
-                                <hr class="my-4">
-
-                                {{-- Account Actions Section --}}
-                                <div>
-                                    <h6 class="text-muted mb-3 fw-semibold">
-                                        <i class="fas fa-cog me-2"></i>Account Actions
-                                    </h6>
-                                    <div class="d-grid">
-                                        <form method="POST" action="{{ route('logout') }}">
-                                            @csrf
-                                            <button type="submit" class="btn btn-outline-danger">
-                                                <i class="fas fa-sign-out-alt me-2"></i>Sign Out
+                                <h5 class="card-title mb-4">Security Settings</h5>
+                                
+                                {{-- Change Password Form --}}
+                                <form method="POST" action="{{ route('profile.resetPassword') }}">
+                                    @csrf
+                                    <div class="mb-4">
+                                        <label for="current_password" class="form-label">Current Password</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-lock"></i>
+                                            </span>
+                                            <input type="password" id="current_password" name="current_password"
+                                                class="form-control @error('current_password') is-invalid @enderror" 
+                                                placeholder="Enter current password" required>
+                                            <button class="btn btn-outline-secondary toggle-password" type="button">
+                                                <i class="fas fa-eye"></i>
                                             </button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Current User Info Display --}}
-                <div class="row mt-4">
-                    <div class="col-12">
-                        <div class="card border-0 shadow-sm bg-white bg-opacity-90">
-                            <div class="card-body p-4">
-                                <div class="row align-items-center">
-                                    <div class="col-md-8">
-                                        <h6 class="text-muted mb-2">Currently signed in as:</h6>
-                                        <div class="d-flex align-items-center">
-                                            <div class="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
-                                                <i class="fas fa-user text-primary"></i>
-                                            </div>
-                                            <div>
-                                                <h5 class="mb-1 fw-semibold">{{ $user->name }}</h5>
-                                                <p class="text-muted mb-0">{{ $user->email }}</p>
-                                            </div>
+                                            @error('current_password')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
-                                    <div class="col-md-4 text-md-end">
-                                        <small class="text-muted">
-                                            <i class="fas fa-calendar-alt me-1"></i>
-                                            Member since {{ $user->created_at->format('M Y') }}
-                                        </small>
+
+                                    <div class="mb-4">
+                                        <label for="new_password" class="form-label">New Password</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-key"></i>
+                                            </span>
+                                            <input type="password" id="new_password" name="new_password"
+                                                class="form-control @error('new_password') is-invalid @enderror" 
+                                                placeholder="Enter new password" required>
+                                            <button class="btn btn-outline-secondary toggle-password" type="button">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            @error('new_password')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
                                     </div>
-                                </div>
+
+                                    <div class="mb-4">
+                                        <label for="new_password_confirmation" class="form-label">Confirm New Password</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-check"></i>
+                                            </span>
+                                            <input type="password" id="new_password_confirmation" name="new_password_confirmation" 
+                                                class="form-control" 
+                                                placeholder="Confirm new password" required>
+                                            <button class="btn btn-outline-secondary toggle-password" type="button">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex justify-content-end">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-shield-alt me-2"></i>Update Password
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -226,58 +194,252 @@
 
 {{-- Custom CSS --}}
 <style>
-    .form-control:focus {
-        border-color: #4facfe;
-        box-shadow: 0 0 0 0.2rem rgba(79, 172, 254, 0.25);
+    /* Profile Page Styles */
+    .profile-page {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
     }
     
-    .input-group-text {
-        transition: all 0.3s ease;
+    /* Profile Header */
+    .profile-header {
+        background: white;
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        margin-bottom: 30px;
     }
     
-    .form-control:focus + .input-group-text,
-    .input-group-text:has(+ .form-control:focus) {
-        border-color: #4facfe;
-        background-color: #f8f9ff;
+    .profile-avatar-container {
+        position: relative;
+        width: 100px;
+        height: 100px;
+        margin: 0 auto;
     }
     
+    .profile-avatar {
+        width: 100px;
+        height: 100px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 2.5rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .profile-avatar-upload {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        background: #fff;
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .profile-avatar-upload:hover {
+        background: #f8f9fa;
+        transform: scale(1.1);
+    }
+    
+    .profile-name {
+        font-weight: 700;
+        color: #333;
+    }
+    
+    .profile-email {
+        color: #6c757d;
+        font-size: 0.95rem;
+    }
+    
+    .profile-meta {
+        display: flex;
+        gap: 16px;
+        color: #6c757d;
+        font-size: 0.85rem;
+    }
+    
+    .profile-meta span {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    
+    /* Alert Styling */
+    .alert {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    
+    .alert-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: rgba(25, 135, 84, 0.1);
+        color: #198754;
+        margin-right: 12px;
+    }
+    
+    /* Tabs Styling */
+    .profile-tabs {
+        border-bottom: none;
+        gap: 8px;
+    }
+    
+    .profile-tabs .nav-link {
+        border: none;
+        border-radius: 8px;
+        padding: 12px 20px;
+        font-weight: 500;
+        color: #495057;
+        transition: all 0.2s ease;
+    }
+    
+    .profile-tabs .nav-link:hover {
+        background-color: #f8f9fa;
+        color: #0d6efd;
+    }
+    
+    .profile-tabs .nav-link.active {
+        background-color: #0d6efd;
+        color: white;
+    }
+    
+    /* Card Styling */
     .card {
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        overflow: hidden;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     
     .card:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
     }
     
-    .btn {
-        transition: all 0.3s ease;
+    .card-title {
+        font-weight: 600;
+        color: #333;
+    }
+    
+    /* Form Styling */
+    .form-label {
         font-weight: 500;
+        color: #495057;
     }
     
-    .btn:hover {
+    .form-control, .form-select {
+        border-radius: 8px;
+        padding: 10px 16px;
+        border-color: #dee2e6;
+        transition: all 0.2s ease;
+    }
+    
+    .form-control:focus, .form-select:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+    
+    .input-group-text {
+        background-color: #f8f9fa;
+        border-color: #dee2e6;
+        color: #6c757d;
+    }
+    
+    .input-group .form-control {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+    
+    .input-group .input-group-text {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    
+    /* Button Styling */
+    .btn {
+        border-radius: 8px;
+        padding: 8px 16px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+    
+    .btn-primary {
+        background: #0d6efd;
+        border-color: #0d6efd;
+    }
+    
+    .btn-primary:hover {
+        background: #0b5ed7;
+        border-color: #0a58ca;
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        box-shadow: 0 4px 12px rgba(13, 110, 253, 0.25);
     }
     
-    .alert {
-        border-radius: 12px;
+    .btn-outline-primary {
+        color: #0d6efd;
+        border-color: #0d6efd;
     }
     
-    .card {
-        border-radius: 16px;
-        overflow: hidden;
+    .btn-outline-primary:hover {
+        background-color: #0d6efd;
+        color: white;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(13, 110, 253, 0.25);
     }
     
-    .card-header {
-        border-radius: 0 !important;
-    }
-    
+    /* Responsive Adjustments */
     @media (max-width: 768px) {
-        .container-fluid {
-            padding-left: 15px;
-            padding-right: 15px;
+        .profile-header {
+            padding: 16px;
+        }
+        
+        .profile-tabs .nav-link {
+            padding: 8px 12px;
+            font-size: 0.9rem;
+        }
+        
+        .card-body {
+            padding: 16px;
         }
     }
 </style>
+
+{{-- Custom JavaScript --}}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Toggle password visibility
+        const toggleButtons = document.querySelectorAll('.toggle-password');
+        toggleButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const input = this.previousElementSibling;
+                const icon = this.querySelector('i');
+                
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    input.type = 'password';
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            });
+        });
+    });
+</script>
 @endsection

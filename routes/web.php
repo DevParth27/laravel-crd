@@ -37,11 +37,11 @@ Route::middleware(['auth'])->group(function () {
     
     // Admin only routes
     Route::middleware(['role:admin'])->group(function () {
-        // Excel admin routes - specific routes first
+        // Excel admin routes
         Route::get('/excel/upload', [ExcelController::class, 'upload'])->name('excel.upload');
         Route::post('/excel/store', [ExcelController::class, 'store'])->name('excel.store');
         
-        // Posts admin routes - specific routes first
+        // Posts admin routes
         Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
         Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
         Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
@@ -49,14 +49,13 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
         Route::delete('/excel/{fileName}/delete', [ExcelController::class, 'deleteFile'])->name('excel.delete-file');
         
-        // API Data Routes (admin only)
+        // API Data Routes 
         Route::get('/api-data', [ApiDataController::class, 'index'])->name('api.index');
         Route::post('/api-data/fetch', [ApiDataController::class, 'fetchData'])->name('api.fetch');
         Route::get('/api-data/datatable', [ApiDataController::class, 'getDatatableData'])->name('api.datatable');
         Route::get('/api-data/columns', [ApiDataController::class, 'getColumns'])->name('api.columns');
     });
     
-    // These parameterized routes should come after the specific routes
     Route::get('/excel/{fileName}/data', [ExcelController::class, 'getData'])->name('excel.data');
     Route::get('/excel/{fileName}/columns', [ExcelController::class, 'getColumns'])->name('excel.columns');
     Route::get('/excel/{file}', [ExcelController::class, 'show'])->name('excel.show');
