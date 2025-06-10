@@ -21,24 +21,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <div class="card bg-success text-white">
-                                <div class="card-body">
-                                    <h5 class="card-title"><i class="fas fa-file-excel"></i> Excel Files</h5>
-                                    <p class="card-text">Manage Excel files and data</p>
-                                    <a href="{{ route('excel.index') }}" class="btn btn-light">View Files</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <div class="card bg-info text-white">
-                                <div class="card-body">
-                                    <h5 class="card-title"><i class="fas fa-database"></i> Posts</h5>
-                                    <p class="card-text">Manage posts and content</p>
-                                    <a href="{{ route('posts.index') }}" class="btn btn-light">View Posts</a>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
