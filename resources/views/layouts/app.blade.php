@@ -186,6 +186,7 @@
     </button>
 
     <!-- Sidebar -->
+    <!-- Sidebar -->
     <div class="sidebar d-flex flex-column">
         <div class="sidebar-header text-center mb-4">
             <h4 class="mt-2 fw-bold">
@@ -206,6 +207,12 @@
                href="{{ route('excel.upload') }}">
                 <i class="fas fa-upload me-3"></i> 
                 <span>Upload Excel</span>
+            </a>
+            
+            <a class="nav-link d-flex align-items-center {{ request()->routeIs('admin.*') ? 'active' : '' }}" 
+               href="{{ route('admin.index') }}">
+                <i class="fas fa-user-shield me-3"></i> 
+                <span>Admin Panel</span>
             </a>
             @endif
             

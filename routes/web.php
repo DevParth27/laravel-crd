@@ -6,6 +6,7 @@ use App\Http\Controllers\ApiFetchController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ApiDataController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\AdminController;
 
 
 // Redirect root to excel dashboard
@@ -54,8 +55,19 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/api-data/fetch', [ApiDataController::class, 'fetchData'])->name('api.fetch');
         Route::get('/api-data/datatable', [ApiDataController::class, 'getDatatableData'])->name('api.datatable');
         Route::get('/api-data/columns', [ApiDataController::class, 'getColumns'])->name('api.columns');
-    });
     
+        // Admin user management routes
+        Route::prefix('admin')->name('admin.')->group(function () {
+            Route::get('/', [AdminController::class, 'index'])->name('index');
+            Route::get('/users', [AdminController::class, 'users'])->name('users');
+            Route::get('/users/data', [AdminController::class, 'getUsersData'])->name('users.data');
+            Route::get('/users/create', [AdminController::class, 'create'])->name('users.create');
+            Route::post('/users', [AdminController::class, 'store'])->name('users.store');
+            Route::get('/users/{user}/edit', [AdminController::class, 'edit'])->name('users.edit');
+            Route::put('/users/{user}', [AdminController::class, 'update'])->name('users.update');
+            Route::delete('/users/{user}', [AdminController::class, 'destroy'])->name('users.destroy');
+        });
+    });
     Route::get('/excel/{fileName}/data', [ExcelController::class, 'getData'])->name('excel.data');
     Route::get('/excel/{fileName}/columns', [ExcelController::class, 'getColumns'])->name('excel.columns');
     Route::get('/excel/{file}', [ExcelController::class, 'show'])->name('excel.show');

@@ -69,4 +69,22 @@ class User extends Authenticatable
     {
         return $this->role === 'user';
     }
+
+    /**
+     * Get the permissions for the user.
+     */
+    public function permissions()
+    {
+        return $this->hasMany(UserPermission::class);
+    }
+    
+    /**
+     * Get the excel files that the user has permissions for.
+     */
+    public function excelFiles()
+    {
+        return $this->belongsToMany(ExcelFile::class, 'user_permissions')
+                    ->withPivot('can_view', 'can_delete')
+                    ->withTimestamps();
+    }
 }
