@@ -23,7 +23,7 @@ class PostController extends Controller
     {
         $posts = Post::all();
     
-        return DataTables::of($posts)
+        return \Yajra\DataTables\Facades\DataTables::of($posts)
             ->addColumn('actions', function ($post) {
                 $buttons = '<a href="' . route('posts.show', $post) . '" class="btn btn-sm btn-secondary">View</a>';
     
