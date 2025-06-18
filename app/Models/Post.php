@@ -14,7 +14,6 @@ class Post extends Model
         'author'
     ];
 
-    // Optional: Define relationships, scopes, etc.
     public function scopePublished($query)
     {
         return $query->where('published', true);

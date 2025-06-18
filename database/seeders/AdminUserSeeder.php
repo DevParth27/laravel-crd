@@ -30,6 +30,7 @@ class AdminUserSeeder extends Seeder
                 'email' => 'user@example.com',
                 'password' => Hash::make('password'),
                 'role' => 'user',
+                'api_token' => Str::random(60),
             ]);
         }
     }
